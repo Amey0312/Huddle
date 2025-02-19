@@ -114,7 +114,7 @@ const Login = () => {
                             value={input.email}
                             name="email"
                             onChange={changeEventHandler}
-                            placeholder="patel@gmail.com"
+                            placeholder="Enter your email"
                         />
                     </div>
 
@@ -125,7 +125,7 @@ const Login = () => {
                             value={input.password}
                             name="password"
                             onChange={changeEventHandler}
-                            placeholder="patel@gmail.com"
+                            placeholder="Contains at least 8 characters, one uppercase, one lowercase, one number, and one special character"
                         />
                     </div>
                     <div className='flex items-center justify-between'>

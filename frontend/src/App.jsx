@@ -45,7 +45,7 @@ const appRouter = createBrowserRouter([
     path: "/profile",
     element: <Profile />
   },
-  // admin ke liye yha se start hoga
+  // admin routes will start from here onwards
   {
     path:"/admin/companies",
     element: <ProtectedRoute><Companies/></ProtectedRoute>

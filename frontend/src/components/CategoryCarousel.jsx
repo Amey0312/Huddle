@@ -10,7 +10,15 @@ const category = [
     "Backend Developer",
     "Data Science",
     "Graphic Designer",
-    "FullStack Developer"
+    "FullStack Developer",
+    "Mobile App Developer ",
+    "Software Developer",
+    "UI/UX Designer",
+    "DevOps Engineer",
+    "Machine Learning Engineer",
+    "Cloud Engineer",
+    "System Administrator",
+    "Cyber Security Engineer",
 ]
 
 const CategoryCarousel = () => {
