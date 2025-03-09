@@ -61,6 +61,8 @@ export const register = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        //I do not understand this part
         const file = req.file;
         let profilePhoto = "";
 
@@ -194,7 +196,7 @@ export const updateProfile = async (req, res) => {
         if(skills){
             skillsArray = skills.split(",");
         }
-        const userId = req.id; // middleware authentication
+        const userId = req.id; // middleware authentication , coming from the isAuthenticated module
         let user = await User.findById(userId);
 
         if (!user) {

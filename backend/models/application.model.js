@@ -15,6 +15,10 @@ const applicationSchema = new mongoose.Schema({
         type:String,
         enum:['pending', 'accepted', 'rejected'],
         default:'pending'
+    },
+    score: {  // 🆕 Added score field
+        type: Number,
+        default: 0
     }
 },{timestamps:true});
 export const Application  = mongoose.model("Application", applicationSchema);

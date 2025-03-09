@@ -23,5 +23,6 @@ const companySchema = new mongoose.Schema({
         ref:'User',
         required:true
     }
-},{timestamps:true})
+},{timestamps:true});
+
 export const Company = mongoose.model("Company", companySchema);
