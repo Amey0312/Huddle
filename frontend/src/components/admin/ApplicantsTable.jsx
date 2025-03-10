@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const shortlistingStatus = ["Accepted", "Rejected"];
 
-const ApplicantsTable = () => {
+const ApplicantsTable = ({ applicants }) => {
     const { applicants } = useSelector(store => store.application);
 
     const statusHandler = async (status, id) => {
@@ -94,7 +94,7 @@ const ApplicantsTable = () => {
                                     <span>NA</span>
                                 )}
                             </TableCell>
-                            <TableCell>{new Date(item?.applicant?.createdAt).toLocaleDateString()}</TableCell>
+                            <TableCell>{new Date(item?.createdAt).toLocaleDateString()}</TableCell>
                             <TableCell>
                                 {item?.score ? <span className="font-semibold">{item?.score}/1</span> : <span className="text-gray-500">Pending</span>}
                             </TableCell>
