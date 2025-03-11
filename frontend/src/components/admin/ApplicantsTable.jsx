@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const shortlistingStatus = ["Accepted", "Rejected"];
 
-const ApplicantsTable = ({ applicants }) => {
+const ApplicantsTable = () => {
     const { applicants } = useSelector(store => store.application);
 
     const statusHandler = async (status, id) => {
@@ -41,7 +41,7 @@ const ApplicantsTable = ({ applicants }) => {
                         <TableHead className="text-right">Action</TableHead>
                     </TableRow>
                 </TableHeader>
-                {/* <TableBody>
+                <TableBody>
                     {
                         applicants && applicants?.applications?.map((item) => (
                             <tr key={item._id}>
@@ -77,47 +77,6 @@ const ApplicantsTable = ({ applicants }) => {
                         ))
                     }
 
-                </TableBody> */}
-
-                <TableBody>
-                    {applicants?.map((item) => (
-                        <TableRow key={item._id}>
-                            <TableCell>{item?.applicant?.fullname}</TableCell>
-                            <TableCell>{item?.applicant?.email}</TableCell>
-                            <TableCell>{item?.applicant?.phoneNumber}</TableCell>
-                            <TableCell>
-                                {item?.applicant?.profile?.resume ? (
-                                    <a className="text-blue-600 cursor-pointer" href={item?.applicant?.profile?.resume} target="_blank" rel="noopener noreferrer">
-                                        {item?.applicant?.profile?.resumeOriginalName || "View Resume"}
-                                    </a>
-                                ) : (
-                                    <span>NA</span>
-                                )}
-                            </TableCell>
-                            <TableCell>{new Date(item?.createdAt).toLocaleDateString()}</TableCell>
-                            <TableCell>
-                                {item?.score ? <span className="font-semibold">{item?.score}/1</span> : <span className="text-gray-500">Pending</span>}
-                            </TableCell>
-                            <TableCell className="text-right">
-                                <Popover>
-                                    <PopoverTrigger>
-                                        <MoreHorizontal />
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-32 p-2">
-                                        {shortlistingStatus.map((status, index) => (
-                                            <div
-                                                key={index}
-                                                onClick={() => statusHandler(status.toLowerCase(), item?._id)}
-                                                className="p-2 cursor-pointer hover:bg-gray-100 rounded"
-                                            >
-                                                {status}
-                                            </div>
-                                        ))}
-                                    </PopoverContent>
-                                </Popover>
-                            </TableCell>
-                        </TableRow>
-                    ))}
                 </TableBody>
 
             </Table>
@@ -125,4 +84,4 @@ const ApplicantsTable = ({ applicants }) => {
     )
 }
 
-export default ApplicantsTable
+export default ApplicantsTable;
