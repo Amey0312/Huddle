@@ -68,7 +68,7 @@ export const register = async (req, res) => {
 
         if (file) {
             const fileUri = getDataUri(file);
-            const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+            const cloudResponse = await cloudinary.uploader.upload(fileUri.content, {access_mode: "public"});
             profilePhoto = cloudResponse.secure_url;
         }
 
@@ -188,7 +188,7 @@ export const updateProfile = async (req, res) => {
         const file = req.file;
         // cloudinary ayega idhar
         const fileUri = getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content, {resource_type:"raw",access_mode: "public"});
 
 
 

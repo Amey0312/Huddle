@@ -54,6 +54,7 @@ const ApplicantsTable = () => {
                                     }
                                 </TableCell>
                                 <TableCell>{item?.applicant.createdAt.split("T")[0]}</TableCell>
+                                <TableCell>{item?.score}</TableCell>
                                 <TableCell className="float-right cursor-pointer">
                                     <Popover>
                                         <PopoverTrigger>
