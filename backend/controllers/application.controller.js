@@ -156,7 +156,6 @@ export const getApplicants = async (req, res) => {
                         console.log(`Invalid content-type: ${contentType} for ${resumePath}`);
                         return { ...application.toObject(), score: 0, message: 'Invalid resume format. Only PDF allowed.' };
                     }
-
                     const resumeBuffer = response.data;
 
                     // Parse PDF and extract text
@@ -229,3 +228,101 @@ export const updateStatus = async (req,res) => {
     }
 
 }
+
+export const processJobApplications = async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const job = await Job.findById(jobId).populate("applications");
+
+        if (!job) {
+            return res.status(404).json({ message: "Job not found", success: false });
+        }
+
+        const { evaluationCriteria, position } = job;
+
+        // Fetch and sort applications by score (descending)
+        let applications = await Application.find({ job: jobId }).sort({ score: -1 });
+
+        if (applications.length === 0) {
+            return res.status(400).json({ message: "No applications found for this job", success: false });
+        }
+
+        let acceptedApplicants = [];
+        let rejectedApplicants = [];
+
+        // Process applications
+        for (const application of applications) {
+            if (application.score >= evaluationCriteria && acceptedApplicants.length < position) {
+                application.status = "accepted";
+                acceptedApplicants.push(application._id);
+            } else {
+                application.status = "rejected";
+                rejectedApplicants.push(application._id);
+            }
+            await application.save();
+        }
+
+        // Update job with accepted & rejected applicants
+        job.acceptedApplicants = acceptedApplicants;
+        job.rejectedApplicants = rejectedApplicants;
+        await job.save();
+
+        return res.status(200).json({
+            message: "Applicants have been evaluated and statuses updated.",
+            acceptedApplicants,
+            rejectedApplicants,
+            success: true,
+        });
+    } catch (error) {
+        console.error("Error processing applications:", error);
+        return res.status(500).json({ message: "Internal server error", success: false });
+    }
+};
+
+// Auto-select applicants after the job deadline
+export const autoSelectApplicants = async () => {
+    try {
+        // Get jobs where deadline has passed and applicants are still pending
+        const expiredJobs = await Job.find({
+            deadline: { $lt: new Date() }, // Past deadline
+            applications: { $exists: true, $not: { $size: 0 } }
+        }).populate({
+            path: 'applications',
+            populate: {
+                path: 'applicant'
+            }
+        });
+
+        for (const job of expiredJobs) {
+            const { applications, position, evaluationCriteria } = job;
+
+            // Filter out applicants who meet evaluation criteria
+            let filteredApplicants = applications.filter(app => app.score >= evaluationCriteria);
+
+            // Sort applicants by: Score → Experience Level → Earliest Application
+            filteredApplicants.sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score; // Higher score first
+                if (b.applicant.experienceLevel !== a.applicant.experienceLevel) return b.applicant.experienceLevel - a.applicant.experienceLevel; // More experience first
+                return new Date(a.createdAt) - new Date(b.createdAt); // Earlier applications first
+            });
+
+            // Select top `N` applicants
+            const selectedApplicants = filteredApplicants.slice(0, position);
+            const rejectedApplicants = filteredApplicants.slice(position);
+
+            // Update status for accepted and rejected applicants
+            for (const app of selectedApplicants) {
+                app.status = "accepted";
+                await app.save();
+            }
+            for (const app of rejectedApplicants) {
+                app.status = "rejected";
+                await app.save();
+            }
+        }
+
+        console.log("✅ Auto-selection process completed.");
+    } catch (error) {
+        console.error("❌ Error processing applications:", error);
+    }
+};

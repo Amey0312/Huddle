@@ -20,5 +20,6 @@ const applicationSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
+    
 },{timestamps:true});
 export const Application  = mongoose.model("Application", applicationSchema);

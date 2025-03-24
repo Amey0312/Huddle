@@ -7,6 +7,9 @@ import userRoute from "./routes/user.route.js";
 import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
+import cron from "node-cron";
+import { autoSelectApplicants } from "./controllers/application.controller.js";
+
 
 dotenv.config();
 
@@ -22,6 +25,11 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
+// Run the auto-selection process every hour
+cron.schedule("0 * * * *", async () => {
+    console.log("🔄 Running auto-selection process...");
+    await autoSelectApplicants();
+});
 const PORT = process.env.PORT || 3000;
 
 
