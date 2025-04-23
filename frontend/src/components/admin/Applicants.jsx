@@ -167,7 +167,6 @@ const Applicants = () => {
                         {loading ? "Processing..." : "Auto-Evaluate Applicants"}
                     </button>
                 </div>
-
                 <ApplicantsTable />
             </div>
         </div>

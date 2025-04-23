@@ -194,6 +194,9 @@ export const getApplicants = async (req, res) => {
         });
     }
 };
+
+
+
 export const updateStatus = async (req,res) => {
     try {
         const {status} = req.body;
